@@ -93,6 +93,16 @@ class Airship(object):
             quiettime_start=None, quiettime_end=None, tz=None):
         """Register the device token with UA."""
         url = common.DEVICE_TOKEN_URL + device_token
+        return self._registration_call(url, alias, tags, badge, quiettime_start, quiettime_end, tz)
+
+    def register_apid(self, apid, alias=None, tags=None, badge=None,
+                      quiettime_start=None, quiettime_end=None, tz=None):
+        """Register the device apid with UA."""
+        url = common.APID_URL + apid
+        return self._registration_call(url, alias, tags, badge, quiettime_start, quiettime_end, tz)
+
+    def _registration_call(self, explicit_url, alias=None, tags=None, badge=None,
+                           quiettime_start=None, quiettime_end=None, tz=None):
         payload = {}
         if alias is not None:
             payload['alias'] = alias
@@ -114,7 +124,7 @@ class Airship(object):
             body = ''
             content_type = None
 
-        response = self._request('PUT', body, url, content_type,
+        response = self._request('PUT', body, explicit_url, content_type,
             version=1)
         return response.status_code == 201
 
